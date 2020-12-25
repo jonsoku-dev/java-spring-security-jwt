@@ -1,5 +1,7 @@
 package com.tamastudy.jwt.model;
 
+import lombok.Getter;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Entity
+@Getter
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

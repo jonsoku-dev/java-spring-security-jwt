@@ -1,5 +1,6 @@
 package com.tamastudy.jwt.config;
 
+import com.tamastudy.jwt.config.jwt.JwtAuthenticationFilter;
 import com.tamastudy.jwt.filter.MyFilter3;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // https://blog.naver.com/getinthere/222094919059
         // BasicAuthenticationFilter 가 실행되기 전에 MyFilter1 가 걸린다.
-        http.addFilterBefore(new MyFilter3(), BasicAuthenticationFilter.class);
+//        http.addFilterBefore(new MyFilter3(), BasicAuthenticationFilter.class);
         http.csrf().disable();
         // SessionCreationPolicy.STATELESS : 세션을 사용하지 않겠다.
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -29,6 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(corsFilter) // 모든 요청은 이 filter 를 무조건 타게된다.-> controller @CrossOrigin(인증X), 시큐리티 필터에 등록(인증O)
                 .formLogin().disable()
                 .httpBasic().disable()
+                .addFilter(new JwtAuthenticationFilter(authenticationManager())) // AuthenticationManger
                 .authorizeRequests()
                 .antMatchers("/api/v1/user/**")
                 .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
@@ -38,6 +40,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .access("hasRole('ROLE_ADMIN')")
                 .anyRequest()
                 .permitAll();
-
     }
 }
